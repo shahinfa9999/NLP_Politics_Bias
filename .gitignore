@@ -1,0 +1,41 @@
+# Python-related
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+
+# Virtual environment
+myvenv/
+env/
+venv/
+
+# Model files and large binaries
+*.h5
+*.pkl
+*.json
+*.npy
+
+# Temporary files
+*.log
+*.tmp
+*.swp
+.DS_Store
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Exclude large datasets
+*.csv
+*.tsv
+*.zip
+*.tar.gz
+
+#exclude specific folders
+political-bias-model/
+archive/
+results/
+
+
+# Exclude temporary folders
+/tmp/

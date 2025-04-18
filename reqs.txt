@@ -1,0 +1,14 @@
+openai
+python-dotenv
+datasets
+pandas
+numpy
+bertopic
+wikipedia
+sqlite-utils
+spacy
+vaderSentiment
+scikit-learn 
+torch 
+transformers 
+gensim
