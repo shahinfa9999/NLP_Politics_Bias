@@ -7,13 +7,13 @@ Article:
 
 def summary_prompt(article_text):
     return f"""
-Summarize the following news article in 3 sentences or less:
+Summarize the following news article in 5 sentences or less and try to ignore the political bias:
 {article_text}
 """
 
 def context_prompt(article_text):
     return f"""
-Given the article below, provide a brief historical background relevant to the main issue discussed.
+Given the article below, provide a brief historical background relevant to the main issue discussed in the article without any bias.
 Article:
 {article_text}
 """

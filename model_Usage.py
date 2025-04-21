@@ -115,39 +115,91 @@ def classify_article(text, model_type='ensemble'):
     
     return label, confidence
 
+### AI anf history summary functions 
+import os
+from openai import OpenAI
+from dotenv import load_dotenv
+from prompts import bias_prompt, summary_prompt, context_prompt
+from archive.utils import chunk_article
+from database import init_db, save_result
+import wikipedia
+
+# python -m spacy download en_core_web_sm
+
+load_dotenv()
+#openai.api_key = os.getenv("OPENAI_API_KEY")
+
+def call_gpt(prompt, model="gpt-4"):
+    client = OpenAI(
+        # This is the default and can be omitted
+        api_key=os.environ.get("OPENAI_API_KEY"),
+    )
+
+    response = client.responses.create(
+        model="gpt-4o",
+        instructions="You are a news analyst that talks like sherlock holmes providing clarity on biased news input",
+        input=prompt,
+    )
+    return (response.output_text).strip()
+    '''
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7,
+    )
+    return response['choices'][0]['message']['content'].strip()
+    '''
+
+def analyze_article(article):
+
+    print("Running Summarization...")
+    summary = call_gpt(summary_prompt(article))
+    print("Summary:", summary, '\n')
+
+    print(" Generating Historical Context...")
+    context = call_gpt(context_prompt(article))
+    print("Context:", context, '\n')
+
+def get_context_from_wiki(query):
+    try:
+        summary = wikipedia.summary(query, sentences=5)
+        return summary
+    except wikipedia.DisambiguationError as e:
+        return f"Disambiguation Error. Try: {e.options[:3]}"
+    except Exception as e:
+        return f"Error: {e}"
+
 def main():
     print("Political Bias Classifier")
     print("------------------------")
     print("Enter article text to classify (type 'exit' to quit):")
     
-    while True:
-        # Get user input
-        print("\nEnter text (or 'exit'):")
-        user_input = input()
-        
-        if user_input.lower() == 'exit':
-            break
-        
-        if not user_input.strip():
-            print("Please enter some text to classify.")
-            continue
-        
-        # Classify the text using ensemble model
+    
+    # Classify the text using ensemble model
+    try:
         try:
-            bias, confidence = classify_article(user_input)
-            print(f"\nPolitical bias: {bias.upper()} (confidence: {confidence:.2f})")
-            
-            # Also show individual model predictions if desired
-            print("\nIndividual model predictions:")
-            rf_bias, rf_conf = classify_article(user_input, 'rf')
-            xgb_bias, xgb_conf = classify_article(user_input, 'xgb')
-            nn_bias, nn_conf = classify_article(user_input, 'nn')
-            
-            print(f"Random Forest: {rf_bias.upper()} (confidence: {rf_conf:.2f})")
-            print(f"XGBoost: {xgb_bias.upper()} (confidence: {xgb_conf:.2f})")
-            print(f"Neural Network: {nn_bias.upper()} (confidence: {nn_conf:.2f})")
+            file = open("trial_article.txt", "r")
+            user_input=file.read()
+            file.close()
         except Exception as e:
             print(f"Error classifying text: {e}")
+
+        bias, confidence = classify_article(user_input)
+        print(f"\nPolitical bias: {bias.upper()} (confidence: {confidence:.2f})")
+        
+        # Also show individual model predictions if desired
+        print("\nIndividual model predictions:")
+        rf_bias, rf_conf = classify_article(user_input, 'rf')
+        xgb_bias, xgb_conf = classify_article(user_input, 'xgb')
+        nn_bias, nn_conf = classify_article(user_input, 'nn')
+        
+        print(f"Random Forest: {rf_bias.upper()} (confidence: {rf_conf:.2f})")
+        print(f"XGBoost: {xgb_bias.upper()} (confidence: {xgb_conf:.2f})")
+        print(f"Neural Network: {nn_bias.upper()} (confidence: {nn_conf:.2f})")
+
+        analyze_article(user_input)
+    except Exception as e:
+        print(f"Error classifying text: {e}")
 
 if __name__ == "__main__":
     main()

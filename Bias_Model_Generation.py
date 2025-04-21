@@ -14,6 +14,21 @@ data = data.dropna(subset=['text', 'bias_rating'])
 cnn_daily_mail = load_dataset("cnn_dailymail", "3.0.0")
 cnn_texts_train = cnn_daily_mail['train']['article']
 
+xlsx_file = 'annotations.xlsx'
+data_MBIC = pd.read_excel(xlsx_file)
+data_MBIC = data_MBIC[['text', 'type']]
+data_MBIC = data_MBIC.dropna(subset=['text', 'type'])
+data_MBIC= data_MBIC.rename(columns={'type': 'bias_rating'})
+
+data_MBIC_train = data_MBIC[:int(len(data_MBIC)*0.8)]
+#data_MBIC_test = data_MBIC[int(len(data_MBIC)*0.8):]
+
+
+
+
+
+
+
 # Function to determine the source more reliably
 def determine_source(text):
     # Check for CNN mentions in a more reliable way
@@ -54,7 +69,7 @@ cnn_train_df = pd.DataFrame(cnn_train_data)
 cnn_test_df = pd.DataFrame(cnn_test_data)
 
 # Combine with original dataset
-combined_data = pd.concat([data, cnn_train_df], ignore_index=True)
+combined_data = pd.concat([data, cnn_train_df,data_MBIC_train,cnn_test_df], ignore_index=True)
 #combined_data = combined_data[:10000]  # Limit to 10,000 rows for faster processing
 combined_data = combined_data.dropna(subset=['text', 'bias_rating'])
 
@@ -130,7 +145,7 @@ X_test_counts = vectorizer.transform(X_test)
 
 # Train LDA model
 print("Training LDA model...")
-n_topics = 100 #20  # tune this hyperparameter
+n_topics = 15 #20  # tune this hyperparameter
 lda = LatentDirichletAllocation(
     n_components=n_topics,
     max_iter=20,
@@ -237,9 +252,9 @@ def get_bert_embeddings(texts, batch_size=16):
 
 # Get embeddings
 print("Generating BERT embeddings for training set...")
-X_train_bert = get_bert_embeddings(X_train)
+X_train_bert = get_bert_embeddings(X_train, batch_size=4)
 print("Generating BERT embeddings for test set...")
-X_test_bert = get_bert_embeddings(X_test)
+X_test_bert = get_bert_embeddings(X_test, batch_size=4)
 
 # Combine with LDA topics
 X_train_combined = np.hstack([X_train_topics, X_train_bert])
