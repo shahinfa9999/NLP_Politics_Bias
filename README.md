@@ -29,7 +29,7 @@ source venv/bin/activate  # or venv\Scripts\activate on Windows
 
 ### 2.  Install dependencies
 - Use Python 3.10 to be able to use tesnor flow and sickit-learn
-- pip install -r requirements.txt
+- pip install -r reqs.txt
 - Major depedencies:
     -scikit-learn
     -tensor
