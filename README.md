@@ -1,6 +1,6 @@
 # Political Bias Classification & Summary Toolkit
 
-This project provides tools for detecting political bias in news articles, generating concise summaries, and analyzing historical contextual content using NLP techniques. It uses LDA topic modeling, transformer-based embeddings ( RoBERTa), and machine learning classifiers such as RandomForest, and XGBoost to detect bias, and an openAI API to provide historical context and a summary.
+This project provides tools for detecting political bias in news articles, generating concise summaries, and analyzing historical contextual content using NLP techniques. It uses LDA topic modeling, transformer-based embeddings ( RoBERTa), and machine learning classifiers such as RandomForest, and XGBoost to detect bias. It also uses an openAI API to provide historical context and a summary.
 
 ## Project Structure
 
@@ -45,6 +45,16 @@ source venv/bin/activate  # or venv\Scripts\activate on Windows
 Bias_Model_Generation.py: Accuracy, precision, recall, and F1 scores for bias classification when training a model, and saves the model.
 
 model_Usage.py generates a summary using predefined prompts (need an openAI API key) and predicts political bias using the model trained in Bias_Model_Generation.py. It outputs the predicted bias label along with a confidence score.
+#### Example Usage
+ 
+ -  Example Usage: This step has already done but provided for user-specifc fine tuning 
+ ``` bash
+ python3.10 Bias_Model_Generation.py
+ ```
+ -Simply copy a news article and paste it into the "trial_article.txt" file and run:
+ ``` bash
+ python3.10 model_Usage.py
+ ```
 
 #### Example Output and Model Comparison:
 
@@ -76,17 +86,6 @@ Why the Neural Network Stands Out:
 - Confidence: The confidence level (0.70) is strong, especially compared to Random Forest’s 0.54.
 - Consistency: Early testing suggests the NNN performs reliably across various sources, making it a strong candidate for primary use or ensemble weighting.
 
-
-### 5. Example Usage
- 
- -  Example Usage: This step has already done but provided for user-specifc fine tuning 
- ``` bash
- python3.10 Bias_Model_Generation.py
- ```
- -Simply copy a news article and paste it into the "trial_article.txt" file and run:
- ``` bash
- python model_Usage.py
- ```
 
 ### 6. Future Work
 - Improve centrist bias classification.

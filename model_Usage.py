@@ -172,9 +172,7 @@ def get_context_from_wiki(query):
 def main():
     print("Political Bias Classifier")
     print("------------------------")
-    print("Enter article text to classify (type 'exit' to quit):")
-    
-    
+
     # Classify the text using ensemble model
     try:
         try:
