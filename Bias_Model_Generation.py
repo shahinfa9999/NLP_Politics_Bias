@@ -106,19 +106,7 @@ def preprocess_spacy(text):
 print("leminatizing the text...")
 combined_data['processed_text'] = combined_data['text'].apply(preprocess_spacy)
 
-'''
-for i in range(len(combined_data)):
-    if "(CNN)" in combined_data['text'][i][:200] or "CNN.com" in combined_data['text'][i] or "CNN " in combined_data['text'][i][:200]:
-        combined_data['text'][i] = combined_data['text'][i].replace("(CNN)", "")
-        combined_data['text'][i] = combined_data['text'][i].replace("(CNN)", "")
-        combined_data['text'][i] = combined_data['text'][i].replace("CNN.com", "")
-        combined_data['text'][i] = combined_data['text'][i].replace("CNN", "")
-        continue
-    if "Daily Mail" in combined_data['text'][i][:200] or "Rueters" in combined_data['text'][i][:200]:
-        combined_data['text'][i] = combined_data['text'][i].replace("Daily Mail", "")
-        combined_data['text'][i] = combined_data['text'][i].replace("Rueters", "")
-        continue
-'''
+
 # Create label mappings
 #label_mapping = {'left': 0, 'center': 1, 'right': 2}
 label_mapping = {'left': 0, 'right': 1}
@@ -364,8 +352,6 @@ print(f'Loss: {loss:.4f}')
 print(f"F1 Score: {f1_score(y_test, y_pred_proc, average='weighted'):.4f}")
 print("\nClassification Report:")
 print(classification_report(y_test, y_pred_proc, target_names=valid_labels)) 
-
-
 
 
 '''
